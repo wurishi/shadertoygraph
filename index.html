@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShaderToy</title>
+    <style>
+        .codePanel {
+            position: fixed;
+            left: 400px;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background-color: black;
+            color: white;
+            padding: 10px;
+            padding-top: 0;
+            overflow: auto;
+            font-size: 14px;
+            font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+            resize: horizontal;
+        }
+
+        .codePanel #title {
+            width: 100%;
+            height: 70px;
+        }
+
+        .codePanel #bottom {
+            position: sticky;
+            bottom: 0;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+        }
+
+        .codePanel .list {
+            min-height: calc(100vh - 70px - 24px);
+        }
+
+        .codePanel .line {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .codePanel .line .num {
+            min-width: 30px;
+            border: 1px solid white;
+        }
+
+        .mylitegraph {
+            width: 800px;
+            height: 600px;
+            position: fixed;
+            left: 400px;
+            top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+    <div id="tools">
+        <form action="">
+            <input id="searchList" list="slist" />
+            <datalist id="slist">
+            </datalist>
+        </form>
+    </div>
+    <div class="litegraph mylitegraph">
+        <canvas id="litegraph_canvas" />
+    </div>
+    <script type="module" src="/src/maincode.ts"></script>
+</body>
+
+</html>

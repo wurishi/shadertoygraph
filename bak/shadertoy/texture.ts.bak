@@ -1,0 +1,266 @@
+import * as Type from './type'
+import * as Utils from './utils'
+
+function createTexture(
+    gl: WebGL2RenderingContext,
+    type: Type.TEXTYPE,
+    xres: number,
+    yres: number,
+    format: Type.TEXFMT,
+    filter: Type.FILTER,
+    wrap: Type.TEXWRP,
+    buffer: ArrayBufferView | null = null
+): Type.Texture {
+    const id = gl.createTexture()!
+
+    const glFoTy = Utils.iFormatPI2GL(format)
+    let glWrap = wrap === Type.TEXWRP.CLAMP ? gl.CLAMP_TO_EDGE : gl.REPEAT
+
+    if (type === Type.TEXTYPE.T2D) {
+        createTextureT2D(id, gl, xres, yres, glFoTy, filter, glWrap, buffer)
+    } else if (type == Type.TEXTYPE.T3D) {
+        createTextureT3D(id, gl, xres, yres, glFoTy, filter, glWrap, buffer)
+    } else {
+        createTextureCubeMap(id, gl, xres, yres, glFoTy, filter, glWrap, buffer)
+    }
+    return {
+        id,
+        xres,
+        yres,
+        format,
+        type,
+        filter,
+        wrap,
+        vFlip: false,
+    }
+}
+
+function createTextureT2D(
+    id: WebGLTexture,
+    gl: WebGL2RenderingContext,
+    xres: number,
+    yres: number,
+    glFoTy: Type.GLFormat,
+    filter: Type.FILTER,
+    glWrap: number,
+    buffer: ArrayBufferView | null = null
+) {
+    gl.bindTexture(gl.TEXTURE_2D, id)
+    gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        glFoTy.format,
+        xres,
+        yres,
+        0,
+        glFoTy.external,
+        glFoTy.type,
+        buffer
+    )
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, glWrap)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, glWrap)
+
+    let mag = gl.NEAREST,
+        min = gl.NEAREST_MIPMAP_LINEAR,
+        mipmap = true
+    switch (filter) {
+        case Type.FILTER.NONE:
+            {
+                mag = gl.NEAREST
+                min = gl.NEAREST
+                mipmap = false
+            }
+            break
+        case Type.FILTER.LINEAR:
+            {
+                mag = gl.LINEAR
+                min = gl.LINEAR
+                mipmap = false
+            }
+            break
+        case Type.FILTER.MIPMAP:
+            {
+                mag = gl.LINEAR
+                min = gl.LINEAR_MIPMAP_LINEAR
+            }
+            break
+    }
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, mag)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, min)
+    mipmap && gl.generateMipmap(gl.TEXTURE_2D)
+    gl.bindTexture(gl.TEXTURE_2D, null)
+}
+
+function createTextureT3D(
+    id: WebGLTexture,
+    gl: WebGL2RenderingContext,
+    xres: number,
+    yres: number,
+    glFoTy: Type.GLFormat,
+    filter: Type.FILTER,
+    glWrap: number,
+    buffer: ArrayBufferView | null = null
+) {
+    gl.bindTexture(gl.TEXTURE_3D, id)
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_BASE_LEVEL, 0)
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MAX_LEVEL, Math.log2(xres))
+    let mag = gl.NEAREST,
+        min = gl.NEAREST_MIPMAP_LINEAR,
+        mipmap = true
+    switch (filter) {
+        case Type.FILTER.NONE:
+            {
+                mag = gl.NEAREST
+                min = gl.NEAREST
+                mipmap = false
+            }
+            break
+        case Type.FILTER.LINEAR:
+            {
+                mag = gl.LINEAR
+                min = gl.LINEAR
+                mipmap = false
+            }
+            break
+        case Type.FILTER.MIPMAP: {
+            mag = gl.LINEAR
+            min = gl.LINEAR_MIPMAP_LINEAR
+            mipmap = false
+        }
+    }
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MAG_FILTER, mag)
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MIN_FILTER, min)
+    mipmap && gl.generateMipmap(gl.TEXTURE_3D)
+
+    gl.texImage3D(
+        gl.TEXTURE_3D,
+        0,
+        glFoTy.format,
+        xres,
+        yres,
+        yres,
+        0,
+        glFoTy.external,
+        glFoTy.type,
+        buffer
+    )
+
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_R, glWrap)
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_S, glWrap)
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_T, glWrap)
+
+    if (filter === Type.FILTER.MIPMAP) {
+        gl.generateMipmap(gl.TEXTURE_3D)
+    }
+    gl.bindTexture(gl.TEXTURE_3D, null)
+}
+
+function createTextureCubeMap(
+    id: WebGLTexture,
+    gl: WebGL2RenderingContext,
+    xres: number,
+    yres: number,
+    glFoTy: Type.GLFormat,
+    filter: Type.FILTER,
+    glWrap: number,
+    buffer: ArrayBufferView | null = null
+) {
+    gl.bindTexture(gl.TEXTURE_CUBE_MAP, id)
+
+    gl.texImage2D(
+        gl.TEXTURE_CUBE_MAP_POSITIVE_X,
+        0,
+        glFoTy.format,
+        xres,
+        yres,
+        0,
+        glFoTy.external,
+        glFoTy.type,
+        buffer
+    )
+    gl.texImage2D(
+        gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
+        0,
+        glFoTy.format,
+        xres,
+        yres,
+        0,
+        glFoTy.external,
+        glFoTy.type,
+        buffer
+    )
+    gl.texImage2D(
+        gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
+        0,
+        glFoTy.format,
+        xres,
+        yres,
+        0,
+        glFoTy.external,
+        glFoTy.type,
+        buffer
+    )
+    gl.texImage2D(
+        gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
+        0,
+        glFoTy.format,
+        xres,
+        yres,
+        0,
+        glFoTy.external,
+        glFoTy.type,
+        buffer
+    )
+    gl.texImage2D(
+        gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
+        0,
+        glFoTy.format,
+        xres,
+        yres,
+        0,
+        glFoTy.external,
+        glFoTy.type,
+        buffer
+    )
+    gl.texImage2D(
+        gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
+        0,
+        glFoTy.format,
+        xres,
+        yres,
+        0,
+        glFoTy.external,
+        glFoTy.type,
+        buffer
+    )
+
+    let mag = gl.LINEAR,
+        min = gl.LINEAR_MIPMAP_LINEAR
+    switch (filter) {
+        case Type.FILTER.NONE:
+            {
+                mag = gl.NEAREST
+                min = gl.NEAREST
+            }
+            break
+        case Type.FILTER.LINEAR:
+            {
+                mag = gl.LINEAR
+                min = gl.LINEAR
+            }
+            break
+        case Type.FILTER.MIPMAP:
+        default:
+            break
+    }
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, mag)
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, min)
+    if (filter === Type.FILTER.MIPMAP) {
+        gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
+    }
+    gl.bindTexture(gl.TEXTURE_CUBE_MAP, null)
+}
+
+export default {
+    createTexture,
+}

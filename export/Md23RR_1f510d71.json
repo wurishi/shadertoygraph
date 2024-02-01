@@ -1,0 +1,42 @@
+{
+    "ver": "0.1",
+    "renderpass": [
+        {
+            "outputs": [],
+            "inputs": [],
+            "code": "#define MAX_RING_NUMBER 1000.0\nvec4 sphere(float radius,vec3 center,vec2 f){\n\tvec4 ret;\n\tvec3 fragCoord = vec3(f.xy ,0.0);\n\tvec2 uv = fragCoord.xy / iResolution.xy;\n\tvec4 sphere_color = vec4(uv,0.5+0.5*sin(iTime),1.0);\n\tvec4 background_color = vec4(0.0,0.0,0.0,0.0);\n\n\tif(distance(fragCoord.xyz ,center.xyz) < radius)\n\t\tret = sphere_color;\n\telse\n\t\tret = background_color;\n\treturn ret;\n}\n/*Returns number of ring, where each ring has approximately \n  size == prev_ring_size*ring_size * ring_incr_step/20.0*/\nfloat get_ring_no(float rings_n,vec3 center,float ring_size,vec3 p,float dist_from_center,float ring_incr_step){\n\tfloat start,end;\n\tfloat i;\n\tfloat decr_step = rings_n / ring_size ;\n\tfloat incr_step = ring_incr_step/ring_size;//ring_size;\n\tfloat current_ring_size,next_ring_size = 0.0;\n\t\n\tnext_ring_size = incr_step;\n\t\n\tfor(float i =0.0; i<MAX_RING_NUMBER;i+=1.0){\n\t\tif(i == rings_n)\n\t\t\tbreak;\n\t\t\n\t\t/*current_ring_size = decr_step + i*ring_size;\n\t\tdecr_step += decr_step;\n\t\tnext_ring_size = decr_step + (i+1.0)*ring_size;\n\t\t*/\n\t\t\n\t\tcurrent_ring_size = next_ring_size;\n\t\tincr_step += incr_step/20.0;//*ring_size;\n\t\tnext_ring_size = current_ring_size + incr_step; \n\t\t\n\t\t\n\t\tstart = distance(vec2(iResolution.x/2.0,current_ring_size),vec2(center.xy));\n\t\t\n\t\tend = distance(vec2(iResolution.x/2.0,next_ring_size),vec2(center.xy) );\n\t\tif(end >= dist_from_center && dist_from_center >= start)\n\t\t\treturn i;\n\t}\n\treturn i;\n\t\n}\nvec3 move_center(vec3 center){\n\tvec3 ret;\n\t\n\tfloat a = cos(iTime);\n\tret.x = center.x *a/2.0 + center.x;\n\tret.y = center.y;\n\treturn ret;\n}\nvoid mainImage( out vec4 fragColor, in vec2 fragCoord )\n{\n\tfloat radius = 70.0;\n\tvec2 uv = fragCoord.xy / iResolution.xy;\n\tvec3 center = vec3(iResolution.x/2.0,iResolution.y/2.0,0.0);\n\tvec4 main_color = vec4(0.0,0.0,0.0,1.0);\n\tvec4 secondary_color = vec4(1.0,1.0,1.0,1.0); \n\tfloat ring_size = 8.0;\n\tfloat ring_decr_step = 2.0;\n\n\t//fragColor = vec4(uv,0.5+0.5*sin(iTime),1.0);\n\tfragColor = sphere(radius,center,fragCoord);\n\t\n\tfloat d_from_center = distance(center.xy,fragCoord.xy);\n\tfloat max_dist = distance(center.xyz,vec3(0.0,0.0,0.0));\n\t\n\tfloat rings_n = max_dist/ring_size;\n\t\n\t\n\tcenter = move_center(center);\n\tfloat ring_no = get_ring_no(rings_n,center,ring_size,vec3(fragCoord.xy,1.0),d_from_center,ring_decr_step);\n\t/*In which circle am i?*/\n\t/*Black or white?*/\n\t\n\tfragColor = mix( main_color, secondary_color, mod(ring_no,2.0));\n/*\tif(mod(ring_no,2.0) == 0.0)\n\t\tfragColor = main_color;\n\telse\n\t\tfragColor = secondary_color;\n\t*/\n}",
+            "name": "Image",
+            "description": "",
+            "type": "image"
+        }
+    ],
+    "flags": {
+        "mFlagVR": false,
+        "mFlagWebcam": false,
+        "mFlagSoundInput": false,
+        "mFlagSoundOutput": false,
+        "mFlagKeyboard": false,
+        "mFlagMultipass": false,
+        "mFlagMusicStream": false
+    },
+    "info": {
+        "id": "Md23RR",
+        "date": "1382909706",
+        "viewed": 176,
+        "name": "Into the void",
+        "username": "gclkaze",
+        "description": "Into the void!",
+        "likes": 2,
+        "published": 1,
+        "flags": 0,
+        "usePreview": 0,
+        "tags": [
+            "simple",
+            "sin",
+            "circle"
+        ],
+        "hasliked": 0,
+        "parentid": "",
+        "parentname": ""
+    }
+}
