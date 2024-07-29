@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import base from './src/utils/proxy'
 
 const hmr = base ? {
-    host: '124.221.113.125:8080' + base
+    host: '1.94.119.31:8080' + base
 } : undefined
 
 export default defineConfig({

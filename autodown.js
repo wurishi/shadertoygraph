@@ -109,8 +109,8 @@ async function getList(n, total) {
   return len;
 }
 
-const current = 101;
-const NUM = 12; // from
+const current = 10;
+const NUM = 7344; // from
 const PAGE = 12;
 
 async function batch(count = 10) {
