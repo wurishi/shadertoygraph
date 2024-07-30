@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const process = require("process");
 
-const TIMEOUT = 60000;
+const TIMEOUT = 70000;
 const DOWNLOAD_FOLDER = "e";
 const LOADED = {};
 
@@ -32,6 +32,7 @@ async function getView(browser, key) {
     httpReq.send(str);
     return httpReq;
   });
+  await page.close();
   if (res && res.__jsnShader) {
     return res.__jsnShader;
   }
@@ -66,8 +67,19 @@ function saveFile(key, jsnShaderStr) {
   });
 }
 
+let browserInst = null;
+async function closeBrowserInst() {
+  if (browserInst) {
+    console.log('关闭当前 browser');
+    await browserInst.close();
+    browserInst = null;
+  }
+}
+
 async function getList(n, total) {
+  await closeBrowserInst();
   const browser = await puppeteer.launch({ timeout: TIMEOUT, headless: "new" });
+  browserInst = browser
   const page = await browser.newPage();
   const listURL = `https://www.shadertoy.com/results?query=&sort=newest&from=${n}&num=${total}`;
   await page.goto(listURL, { timeout: TIMEOUT });
@@ -102,15 +114,16 @@ async function getList(n, total) {
     console.log("end", key);
   }
 
-  await browser.close();
+  await page.close();
+  await closeBrowserInst();
 
   console.log("finish", n);
 
   return len;
 }
 
-const current = 10;
-const NUM = 7344; // from
+const current = 101;
+const NUM = 7020; // from
 const PAGE = 12;
 
 async function batch(count = 10) {
@@ -135,8 +148,11 @@ async function doGetList(num, retry = 1) {
     } catch (error) {
       console.log(`retry ${num}`, error);
       await doGetList(num, retry + 1);
+    } finally {
+      await closeBrowserInst();
     }
   } else {
+    await closeBrowserInst();
     process.abort();
   }
 }
