@@ -282,11 +282,13 @@ Try: Neon weave
 kiloatom 
 
 
-https://www.shadertoy.com/results?query=&sort=newest&from=7032&num=12
+https://www.shadertoy.com/results?query=&sort=newest&from=4860&num=12
 
-587
+406
 /
-7495
+7499
+
+Easter hack #2
 
 
 
