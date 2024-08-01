@@ -269,27 +269,17 @@ XslGRn Nyan and Britney Take London
 
 
 
-
-https://www.shadertoy.com/results?query=&sort=newest&from=7308&num=12
-
-610
-/
-7495
-
-4cS3Wc Volumetric Mandelbox
-
 Try: Neon weave
 kiloatom 
 
 
-https://www.shadertoy.com/results?query=&sort=newest&from=4860&num=12
+https://www.shadertoy.com/results?query=&sort=newest&from=3564&num=12
 
-406
+298
 /
-7499
+7503
 
-Easter hack #2
-
+Metal Hexagon Truchet
 
 
 
