@@ -68,16 +68,16 @@ function saveFile(key, jsnShaderStr) {
 }
 
 let browserInst = null;
-async function closeBrowserInst() {
+async function closeBrowserInst(reason) {
   if (browserInst) {
-    console.log('关闭当前 browser');
+    console.log(`关闭当前 browser [${reason}]`);
     await browserInst.close();
     browserInst = null;
   }
 }
 
 async function getList(n, total) {
-  await closeBrowserInst();
+  await closeBrowserInst('getList start');
   const browser = await puppeteer.launch({ timeout: TIMEOUT, headless: "new" });
   browserInst = browser
   const page = await browser.newPage();
@@ -115,7 +115,7 @@ async function getList(n, total) {
   }
 
   await page.close();
-  await closeBrowserInst();
+  await closeBrowserInst('getList end');
 
   console.log("finish", n);
 
@@ -123,7 +123,7 @@ async function getList(n, total) {
 }
 
 const current = 101;
-const NUM = 3564; // from
+const NUM = 1680; // from
 const PAGE = 12;
 
 async function batch(count = 10) {
@@ -149,10 +149,10 @@ async function doGetList(num, retry = 1) {
       console.log(`retry ${num}`, error);
       await doGetList(num, retry + 1);
     } finally {
-      await closeBrowserInst();
+      await closeBrowserInst('try/catch/finally');
     }
   } else {
-    await closeBrowserInst();
+    await closeBrowserInst('process.abort');
     process.abort();
   }
 }
