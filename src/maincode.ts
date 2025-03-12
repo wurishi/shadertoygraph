@@ -9,6 +9,7 @@ import createMediaRecorder from './utils/mediaRecorder';
 import { requestFullScreen } from './utils/index';
 import parseGLSL from './parseglsl';
 import liteGraphMain from './litegraph';
+import indexdb from './indexdb';
 
 // configs
 // const configs = import.meta.glob('../export/*.json');
@@ -108,6 +109,7 @@ function init(assets: string[]) {
 
   mainFolder.open();
   lazyInit(current, shaderNames, tools as HTMLElement);
+  indexdb(shaderNames);
   return {
     gui,
     setCurrent,
@@ -153,7 +155,8 @@ function createMainUI(root: GUI, st: ShaderToy) {
     fullScreen() {
       requestFullScreen(st.canvas);
       st.canvas.focus();
-    }
+    },
+    output: false,
   };
 
   const pauseControl = root
@@ -173,6 +176,9 @@ function createMainUI(root: GUI, st: ShaderToy) {
   recordControl = root.add(uiData, 'record').name('开始录制')
 
   root.add(uiData, 'fullScreen').name('全屏');
+  root.add(uiData, 'output').name('Output').onChange(v => {
+    st.setOutput(v);
+  })
   return {
     gainControl,
     recordControl
@@ -364,7 +370,7 @@ function createOutputs(outputs: any) {
   return outputArr;
 }
 
-const KEY_当前选择 = '_current_shader_1';
+const KEY_当前选择 = '_current_shader';
 const KEY_已查看列表 = '_visited_list';
 
 function showShaderInfo(info: Info, rootDOM: HTMLElement) {

@@ -262,4 +262,10 @@ export default class ShaderToy {
     public exportToExr = (id: number) => {
         this.effect.exportToExr(id)
     }
+
+    public setOutput = (flag: boolean) => {
+        if (this.canvas) {
+            (this.canvas as any).__output = flag
+        }
+    }
 }

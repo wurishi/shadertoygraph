@@ -1291,7 +1291,21 @@ export default class MyEffectPass {
         this.gpu()
 
         dettachTextures(this.mGL)
+
+        if ((this.mEffect as any).canvas.__output) {
+            if (!this.outputData) {
+                this.outputData = new Uint8Array(1 * 1 * 4)
+                
+            }
+            getPixelData(this.mGL, this.outputData!, 0, 1, 1)
+            const output = []
+            for(let i=0;i<4;i++) {
+                output.push(this.outputData[i] / 255)
+            }
+            console.log(output)
+        }
     }
+    private outputData?:Uint8Array = undefined
 
     private gpu?: GPUDraw
 

@@ -36,7 +36,7 @@ export default function (updateConfig: any, config: any, gui: GUI, passIndex: nu
             createCodePanel(pass.name, passIndex, graphList, changeCode);
         }
     };
-    gui.add(uiData, 'code');
+    gui.add(uiData, 'code').name(`code(L:${graphList.length} C:${pass.code.length})`);
 }
 
 function groupGLSL(code: string) {

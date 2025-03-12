@@ -130,7 +130,7 @@ async function getList(n, total) {
 }
 
 const current = 101;
-const NUM = 1872; // from
+const NUM = 3984; // from
 const PAGE = 12;
 
 async function batch(count = 10) {
