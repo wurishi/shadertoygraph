@@ -274,13 +274,13 @@ kiloatom
 
 
 
-https://www.shadertoy.com/results?query=&sort=newest&from=3984&num=12
+https://www.shadertoy.com/results?query=&sort=newest&from=5040&num=12
 
-333
+421
 /
-8230
+8345
 
-lctBWs color fractal line
+MfyBRc Graphic Design Experiment 18
 
 
 
