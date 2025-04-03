@@ -274,13 +274,14 @@ kiloatom
 
 
 
-https://www.shadertoy.com/results?query=&sort=newest&from=4860&num=12
 
-406
+https://www.shadertoy.com/results?query=&sort=newest&from=4800&num=12
+
+401
 /
-8345
+8366
 
-McyBD3 Blurred Frosted Glass + Rounded
+lXcczS Perceptual cos addition
 
 
 
