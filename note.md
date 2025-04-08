@@ -275,13 +275,13 @@ kiloatom
 
 
 
-https://www.shadertoy.com/results?query=&sort=newest&from=4800&num=12
+https://www.shadertoy.com/results?query=&sort=newest&from=4620&num=12
 
-401
+386
 /
-8366
+8384
 
-lXcczS Perceptual cos addition
+XXycDR Arc Rotated - 2D SDF
 
 
 
