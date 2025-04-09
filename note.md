@@ -275,13 +275,13 @@ kiloatom
 
 
 
-https://www.shadertoy.com/results?query=&sort=newest&from=4620&num=12
+https://www.shadertoy.com/results?query=&sort=newest&from=4500&num=12
 
-386
+376
 /
-8384
+8386
 
-XXycDR Arc Rotated - 2D SDF
+RGA - Meet- Half Plane
 
 
 
