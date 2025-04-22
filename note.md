@@ -275,13 +275,13 @@ kiloatom
 
 
 
-https://www.shadertoy.com/results?query=&sort=newest&from=4500&num=12
+https://www.shadertoy.com/results?query=&sort=newest&from=4788&num=12
 
-376
+400
 /
-8386
+8432
 
-RGA - Meet- Half Plane
+Trips' Mandelbrot Set
 
 
 
